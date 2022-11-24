@@ -1,0 +1,8 @@
+Id    Name    Password    Department    HireDate    Adress    Gender    State
+1    Mohammad    1234    IT    1/2/2020    Amman    Mael    Single
+2    Emad    1234    Sales    1/2/2020    Irbed    Mael    Single
+3    Ahmad    1234    Financial    1/2/2020    Ajloun    Mael    Single
+4    Ali    1234    IT    1/2/2020    Madapa    Mael    Single
+5    Mousa    1234    Sales    1/2/2020    Amman    Mael    Single
+6    Nadeen    1234    Financial    1/2/2020    Aqaba    Mael    Single
+7    Sara    1234    IT    1/2/2020    Amman    Mael    Single
