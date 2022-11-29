@@ -5,6 +5,8 @@
  */
 package payrollsystem.file_data;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author User
@@ -15,14 +17,47 @@ public class FileData {
     private String name;
     private String hireDate;
     private String departement;
+    private String address;
+    private String gender;
+    private String state;
+    private String passwrod;
+    public static ArrayList <FileData> array;
 
-    public FileData(String Id, String Name, String hireDate, String departement) {
-        this.Id = Id;
-        this.name = Name;
-        this.hireDate = hireDate;
-        this.departement = departement;
+    public FileData() {
     }
 
+    
+    
+    
+    public FileData(String Id, 
+            String name, 
+            String password, 
+            String departement, 
+            String hireDate, 
+            String address, 
+            String gender, 
+            String state) {
+        this.Id = Id;
+        this.name = name;
+        this.passwrod = password;
+        this.departement = departement;
+        this.address = address;
+        this.gender = gender;
+        this.state = state;
+        this.hireDate = hireDate;
+    }
+
+    public static ArrayList<FileData> getArray() {
+        return array;
+    }
+
+    public static void setArray(ArrayList<FileData> array) {
+        FileData.array = array;
+    }
+
+    
+
+    
     public String getId() {
         return Id;
     }
@@ -35,8 +70,8 @@ public class FileData {
         return name;
     }
 
-    public void setName(String Name) {
-        this.name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getHireDate() {
@@ -55,9 +90,51 @@ public class FileData {
         this.departement = departement;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String Address) {
+        this.address = Address;
+    }
+
+    public String getPasswrod() {
+        return passwrod;
+    }
+
+    public void setPasswrod(String passwrod) {
+        this.passwrod = passwrod;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String Gender) {
+        this.gender = Gender;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+    
+    
+
+    
+
     @Override
     public String toString() {
-        return name + " hireDate " + hireDate + " Departement " + departement + " ID " + Id; //To change body of generated methods, choose Tools | Templates.
+        return "Name " + name + 
+                " HireDate " + hireDate + 
+                " Address " + address + 
+                " Gender " + gender + 
+                " State " + state + 
+                " Departement " + departement + 
+                " ID " + Id; //To change body of generated methods, choose Tools | Templates.
     }
 
     

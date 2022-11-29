@@ -9,8 +9,10 @@ import java.awt.Window;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import payrollsystem.file_data.FileData;
 
 /**
  *
@@ -139,40 +141,47 @@ public class LoginFrame extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_btnCloseActionPerformed
 
-    
     // Login Button Actions
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        
+
         // fetch password and username from user input
         String password = txtPassword.getText();
         String username = txtUsername.getText();
-        
-        if (password.equals("") || username.equals("")){
+        FileData fileData = new FileData();
+        ArrayList<FileData> fileDataArray  = new ArrayList<> ();
+        if (password.equals("") || username.equals("")) {
             JOptionPane.showMessageDialog(new JFrame(), "Your Password or Email is Empty", "Dialog",
-            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-            int indexPassword = 0, indexUsername = 0;
-            boolean successLogin = false;
 
-            // Read a file form local machine
-            File f = new File("E:\\Java Projects\\PayRollSystem\\employees.txt");
-            try{
-                FileReader fr = new FileReader(f);
-                BufferedReader br = new BufferedReader(fr);
+        int indexPassword = 0, indexUsername = 0;
+        boolean successLogin = false;
 
-            while(br.ready()){
-                // split every line inside a txt file to array accoording to the "    "
-                String [] arrLine = br.readLine().split("    ");
+        // Read a file form local machine
+        File f = new File("employees.txt");
+        try {
+            FileReader fr = new FileReader(f);
+            BufferedReader br = new BufferedReader(fr);
+
+            // Store All data in ArrayList of FileData Object
+            
+            // *****************
+             String currentLine;
+            while((currentLine = br.readLine()) != null) {
+                // trim newline when comparing with lineToRemove
+                String trimmedLine = currentLine.trim();
+                String [] arrLine = trimmedLine.split("    ");
                 for (int index = 0; index < arrLine.length; index++) {
-                    if (arrLine[index].equals("Name"))
+                    if (arrLine[index].equals("Name")) {
                         indexUsername = index;
-                    if (arrLine[index].equals("Password"))
+                    }
+                    if (arrLine[index].equals("Password")) {
                         indexPassword = index;
+                    }
                 }
 
-                if (password.equals(arrLine[indexPassword]) && username.equals(arrLine[indexUsername])){
+                if (password.equals(arrLine[indexPassword]) && username.equals(arrLine[indexUsername])) {
 
                     successLogin = true;
                     this.setVisible(false);
@@ -182,32 +191,29 @@ public class LoginFrame extends javax.swing.JFrame {
                 }
 
             }
-                if (successLogin != true){
-                    JOptionPane.showMessageDialog(new JFrame(), "Your Password or Email is Faild", "Dialog",
-                    JOptionPane.ERROR_MESSAGE);
-                    txtPassword.setText("");
-                    
-                }
-            
-                
-        }catch(Exception e){
+            if (successLogin != true) {
+                JOptionPane.showMessageDialog(new JFrame(), "Your Password or Email is Faild", "Dialog",
+                        JOptionPane.ERROR_MESSAGE);
+                txtPassword.setText("");
+
+            }
+
+            fr.close();
+            br.close();
+        } catch (Exception e) {
             System.out.println(e);
         }
-        
-        
+
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPasswordActionPerformed
 
-    
-
-    
     /**
      * @param args the command line arguments
      */
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
