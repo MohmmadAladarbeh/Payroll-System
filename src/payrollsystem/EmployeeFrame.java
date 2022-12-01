@@ -6,6 +6,7 @@
 package payrollsystem;
 
 import com.sun.rowset.internal.Row;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,11 +14,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -27,6 +34,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 import payrollsystem.file_data.FileData;
 
 /**
@@ -36,7 +50,7 @@ import payrollsystem.file_data.FileData;
 public class EmployeeFrame extends javax.swing.JFrame {
 
     int idIndex = 0, usernameIndex = 0, deptIndex = 0, hireDateIndex = 0, rowCount = 0;
-    DefaultTableModel model;
+    DefaultTableModel empTapleMode;
 
     ArrayList<FileData> allDataFile = FileData.getArray();
 
@@ -45,10 +59,11 @@ public class EmployeeFrame extends javax.swing.JFrame {
      */
     public EmployeeFrame() {
         initComponents();
-        
+
         comDep.addItem("All");
+        comDep.addItem("IT");
         comDep.addItem("Financial");
-        comDep.addItem ("Sales");
+        comDep.addItem("Sales");
     }
 
     /**
@@ -76,6 +91,8 @@ public class EmployeeFrame extends javax.swing.JFrame {
         btnDelete = new javax.swing.JButton();
         btnView = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
+        btnInfoReport = new javax.swing.JButton();
+        btnReport = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -156,6 +173,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        empTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         empTable.getTableHeader().setReorderingAllowed(false);
         empTable.addContainerListener(new java.awt.event.ContainerAdapter() {
             public void componentAdded(java.awt.event.ContainerEvent evt) {
@@ -242,6 +260,34 @@ public class EmployeeFrame extends javax.swing.JFrame {
             }
         });
 
+        btnInfoReport.setBackground(new java.awt.Color(35, 167, 233));
+        btnInfoReport.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
+        btnInfoReport.setText("Info");
+        btnInfoReport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnInfoReportMouseClicked(evt);
+            }
+        });
+        btnInfoReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInfoReportActionPerformed(evt);
+            }
+        });
+
+        btnReport.setBackground(new java.awt.Color(35, 167, 233));
+        btnReport.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
+        btnReport.setText("Print All");
+        btnReport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnReportMouseClicked(evt);
+            }
+        });
+        btnReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("Main");
         jMenu1.addMenuListener(new javax.swing.event.MenuListener() {
             public void menuCanceled(javax.swing.event.MenuEvent evt) {
@@ -281,18 +327,6 @@ public class EmployeeFrame extends javax.swing.JFrame {
                         .addGap(229, 229, 229))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -309,7 +343,25 @@ public class EmployeeFrame extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(txtEmpName, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnInfoReport, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(128, 128, 128))))
         );
         layout.setVerticalGroup(
@@ -339,7 +391,11 @@ public class EmployeeFrame extends javax.swing.JFrame {
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(317, Short.MAX_VALUE))
+                .addGap(66, 66, 66)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnInfoReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(209, Short.MAX_VALUE))
         );
 
         pack();
@@ -361,7 +417,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2MenuSelected
 
     private void txtEmpIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmpIdActionPerformed
-        
+
     }//GEN-LAST:event_txtEmpIdActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -392,13 +448,13 @@ public class EmployeeFrame extends javax.swing.JFrame {
         String id = txtEmpId.getText();
         String name = txtEmpName.getText();
         String dept = comDep.getSelectedItem().toString();
-        model = (DefaultTableModel) empTable.getModel();
+        empTapleMode = (DefaultTableModel) empTable.getModel();
 
         // Clear All data inside the table 
-        if (model.getRowCount() > 0) {
-            while (model.getRowCount() > 0) {
-                for (int i = 0; i < model.getRowCount(); ++i) {
-                    model.removeRow(i);
+        if (empTapleMode.getRowCount() > 0) {
+            while (empTapleMode.getRowCount() > 0) {
+                for (int i = 0; i < empTapleMode.getRowCount(); ++i) {
+                    empTapleMode.removeRow(i);
                 }
             }
         }
@@ -413,17 +469,17 @@ public class EmployeeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnClearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClearMouseClicked
-       
+
     }//GEN-LAST:event_btnClearMouseClicked
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-         model = (DefaultTableModel) empTable.getModel();
+        empTapleMode = (DefaultTableModel) empTable.getModel();
 
         // Clear All data inside the table 
-        if (model.getRowCount() > 0) {
-            while (model.getRowCount() > 0) {
-                for (int i = 0; i < model.getRowCount(); ++i) {
-                    model.removeRow(i);
+        if (empTapleMode.getRowCount() > 0) {
+            while (empTapleMode.getRowCount() > 0) {
+                for (int i = 0; i < empTapleMode.getRowCount(); ++i) {
+                    empTapleMode.removeRow(i);
                 }
             }
         }
@@ -437,10 +493,10 @@ public class EmployeeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateMouseClicked
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        
-        String value = model.getValueAt(empTable.getSelectedRow(), 0).toString();
 
-        DialogFrame dialogFrame = new DialogFrame (this, false,"Update", value);
+        String value = empTapleMode.getValueAt(empTable.getSelectedRow(), 0).toString();
+
+        DialogFrame dialogFrame = new DialogFrame(this, false, "Update", value);
         dialogFrame.setVisible(true);
         dialogFrame.setSize(520, 750);
         dialogFrame.setTitle("Update User");
@@ -454,47 +510,44 @@ public class EmployeeFrame extends javax.swing.JFrame {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
 
         //get the Id for selected row 
-        String value = model.getValueAt(empTable.getSelectedRow(), 0).toString();
- 
+        String value = empTapleMode.getValueAt(empTable.getSelectedRow(), 0).toString();
+
         // delete the row from the Table
-        model.removeRow(empTable.getSelectedRow());
-        
-        
+        empTapleMode.removeRow(empTable.getSelectedRow());
+
         // Clear all data inside ArrayList of FileData
 //        FileData.getArray().clear();
-        
         ArrayList<FileData> fileDataArray = new ArrayList<>();
-        
-       
-        
+
         // read a file 
         File file = new File("employees.txt");
         //Construct the new file that will later be renamed to the original filename.
         File tempFile = new File("employees2.txt");
 
         try {
-            FileReader fileReader = new FileReader(file); 
-                BufferedReader br = new BufferedReader(fileReader);
-                BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile));
-                
-                String currentLine;
+            FileReader fileReader = new FileReader(file);
+            BufferedReader br = new BufferedReader(fileReader);
+            BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile));
 
-                while((currentLine = br.readLine()) != null) {
-                    // trim newline when comparing with lineToRemove
-                    String trimmedLine = currentLine.trim();
-                    String [] array = trimmedLine.split("    ");
-                    
-                    if (array[0].equals(value)) 
-                        continue;
-                        
-                    fileDataArray.add(new FileData(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7]));   
-                    bw.write(currentLine + System.getProperty("line.separator"));
+            String currentLine;
+
+            while ((currentLine = br.readLine()) != null) {
+                // trim newline when comparing with lineToRemove
+                String trimmedLine = currentLine.trim();
+                String[] array = trimmedLine.split("    ");
+
+                if (array[0].equals(value)) {
+                    continue;
                 }
-                bw.close();
-                br.close();
+
+                fileDataArray.add(new FileData(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7]));
+                bw.write(currentLine + System.getProperty("line.separator"));
+            }
+            bw.close();
+            br.close();
 //                file.delete();
 //                tempFile.renameTo(new File("employees.txt"));
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Logger.getLogger(EmployeeFrame.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
         }
@@ -502,11 +555,11 @@ public class EmployeeFrame extends javax.swing.JFrame {
             file.delete();
         }
         tempFile.renameTo(new File("employees.txt"));
-        
+
         FileData.setArray(fileDataArray);
-        
+
         System.out.println("---------------------------------Array After Dlete button -------------------------------------");
-        for (int index = 0; index < fileDataArray.size(); index ++) {
+        for (int index = 0; index < fileDataArray.size(); index++) {
             System.out.println(fileDataArray.get(index));
         }
 
@@ -518,22 +571,21 @@ public class EmployeeFrame extends javax.swing.JFrame {
 
     private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
 
-
         int selectedRow = empTable.getSelectedRow();
 
         //get the Id for selected row 
-        String value = model.getValueAt(empTable.getSelectedRow(), 0).toString();
+        String value = empTapleMode.getValueAt(empTable.getSelectedRow(), 0).toString();
         DialogFrame dialogFrame = new DialogFrame(this, false, "View", value);
         dialogFrame.setVisible(true);
         dialogFrame.setSize(520, 750);
         dialogFrame.setTitle("View");
         dialogFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
+
     }//GEN-LAST:event_btnViewActionPerformed
 
     private void btnAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddMouseClicked
-        
-        
+
+
           }//GEN-LAST:event_btnAddMouseClicked
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
@@ -542,14 +594,153 @@ public class EmployeeFrame extends javax.swing.JFrame {
         dialogFrame.setVisible(true);
         dialogFrame.setTitle("Add New User");
         dialogFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
-        
+
 
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void comDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comDepActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comDepActionPerformed
+
+    private void btnInfoReportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnInfoReportMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnInfoReportMouseClicked
+
+    private void btnInfoReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInfoReportActionPerformed
+       
+        String idOfSelectedRow = empTapleMode.getValueAt(empTable.getSelectedRow(), 0).toString();     
+        String repName = "Info_Report";
+        
+        Map parameter = new HashMap();
+        
+        for (int index = 0; index < allDataFile.size(); index++){
+            if (allDataFile.get(index).getId().equals(idOfSelectedRow)){
+                parameter.put("P_Id", allDataFile.get(index).getId());
+                parameter.put("P_Name", allDataFile.get(index).getName());
+                parameter.put("P_Gender", allDataFile.get(index).getGender());
+                parameter.put("P_Status", allDataFile.get(index).getState());
+                parameter.put("P_HireDate", allDataFile.get(index).getHireDate());
+                parameter.put("P_Address", allDataFile.get(index).getAddress());
+            }
+        }
+        
+        
+        
+        
+        
+        try {
+            InputStream reportSource;
+            reportSource = getClass().getResourceAsStream("/reports/" + repName + ".jrxml");
+            
+            JRBeanArrayDataSource dataSource ;
+                    
+            HashMap [] hash = new HashMap[1];
+            dataSource = new JRBeanArrayDataSource(hash);
+           
+                
+            
+            JasperReport report = JasperCompileManager.compileReport(reportSource);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameter, dataSource);
+            JasperViewer.viewReport(jasperPrint);
+        } catch (JRException ex) {
+            Logger.getLogger(EmployeeFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        
+
+
+    }//GEN-LAST:event_btnInfoReportActionPerformed
+
+    private void btnReportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnReportMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReportMouseClicked
+
+    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
+        try {
+            showReport();
+        } catch (JRException ex) {
+            Logger.getLogger(EmployeeFrame.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("There's somthing wrong !!!!!!!!!!!!!!!!!!!!!!");
+        }
+    }//GEN-LAST:event_btnReportActionPerformed
+
+    // Show Report Function
+    public void showReport() throws JRException {
+        try {
+
+            String empIdNumber = txtEmpId.getText().toString();
+            String empName = txtEmpName.getText().toString();
+            String depName = comDep.getSelectedItem().toString();
+
+            List<String> idList = new ArrayList();
+            List<String> nameList = new ArrayList();
+            List<String> dateList = new ArrayList();
+            List<String> depList = new ArrayList();
+
+            for (int index = 0; index < allDataFile.size(); index++) {
+                idList.add(allDataFile.get(index).getId());
+                nameList.add(allDataFile.get(index).getName());
+                dateList.add(allDataFile.get(index).getHireDate());
+                depList.add(allDataFile.get(index).getDepartement());
+                System.out.println("Array" + allDataFile.get(index));
+            }
+            
+            Collections.sort(depList);
+
+            JRBeanArrayDataSource dataSource;
+            String repName = "Test_Report";
+            if (idList.isEmpty()) {
+                /*Fill Report data source*/
+                dataSource = null;
+            } else {
+           
+                HashMap[] detailRows;
+                detailRows = new HashMap[idList.size()];
+                /* Fill Report detail rows */
+                int i = 0;
+
+                for (String trx : idList) {
+
+                    HashMap row = new HashMap();
+
+                    row.put("F_Id", trx);
+                    row.put("F_Name", nameList.get(i));
+                    row.put("F_Dep", depList.get(i));
+                    row.put("F_Date", dateList.get(i));
+
+                    detailRows[i] = row;
+                    i++;
+
+                    
+                }
+                /*Fill Report data source*/
+
+                dataSource = new JRBeanArrayDataSource(detailRows);
+            }
+
+            /*Fill Report general parameters*/
+            Map parameters = new HashMap();
+            
+            BufferedImage image = ImageIO.read(getClass().getResource("image\\Payroll_Logo.png"));
+            parameters.put("logo", image );
+            
+
+            InputStream reportSource;
+            reportSource = getClass().getResourceAsStream("/reports/" + repName + ".jrxml");
+
+            JasperReport report = JasperCompileManager.compileReport(reportSource);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataSource);
+            JasperViewer.viewReport(jasperPrint, false);
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+
+        }
+
+    }
 
     /**
      * @param args the command line arguments
@@ -582,7 +773,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new EmployeeFrame().setVisible(true);
-               
+
             }
         });
     }
@@ -592,6 +783,8 @@ public class EmployeeFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnInfoReport;
+    private javax.swing.JButton btnReport;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JButton btnView;
@@ -612,7 +805,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
     // Search Method 
     private void search(String username, String id, String departement) {
 
-        String[] tabelData = new String[model.getColumnCount()];
+        String[] tabelData = new String[empTapleMode.getColumnCount()];
         int count = 0;
 
         // Read a file form local machine
@@ -620,7 +813,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
         try {
             FileReader fr = new FileReader(f);
             BufferedReader br = new BufferedReader(fr);
-
+            
             while (br.ready()) {
 
                 // split every line inside a txt file to array accoording to the "    "
@@ -654,7 +847,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
                                 tabelData[1] = arrLine[usernameIndex];
                                 tabelData[2] = arrLine[hireDateIndex];
                                 tabelData[3] = arrLine[deptIndex];
-                                model.addRow(tabelData);
+                                empTapleMode.addRow(tabelData);
 
                             }
 
@@ -663,7 +856,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
                             tabelData[1] = arrLine[usernameIndex];
                             tabelData[2] = arrLine[hireDateIndex];
                             tabelData[3] = arrLine[deptIndex];
-                            model.addRow(tabelData);
+                            empTapleMode.addRow(tabelData);
                         }
 
                     } else {
@@ -673,7 +866,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
                                 tabelData[1] = arrLine[usernameIndex];
                                 tabelData[2] = arrLine[hireDateIndex];
                                 tabelData[3] = arrLine[deptIndex];
-                                model.addRow(tabelData);
+                                empTapleMode.addRow(tabelData);
                             }
                         }
                         if (username.equals("")) {
@@ -682,7 +875,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
                                 tabelData[1] = arrLine[usernameIndex];
                                 tabelData[2] = arrLine[hireDateIndex];
                                 tabelData[3] = arrLine[deptIndex];
-                                model.addRow(tabelData);
+                                empTapleMode.addRow(tabelData);
                             }
                         }
                         if (!username.equals("") && !id.equals("")) {
@@ -691,7 +884,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
                                 tabelData[1] = arrLine[usernameIndex];
                                 tabelData[2] = arrLine[hireDateIndex];
                                 tabelData[3] = arrLine[deptIndex];
-                                model.addRow(tabelData);
+                                empTapleMode.addRow(tabelData);
                             }
                         }
                     }

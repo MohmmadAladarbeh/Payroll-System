@@ -106,7 +106,7 @@ public class DialogFrame extends javax.swing.JDialog {
                     txtId.setEditable(false);
                     txtName.setEditable(false);
                     txtAddress.setEditable(false);
-                
+                    
                     btnSave.setVisible(false);
                     txtId.setText(allDataFileArray.get(index).getId());
                     txtName.setText(allDataFileArray.get(index).getName());
@@ -126,8 +126,8 @@ public class DialogFrame extends javax.swing.JDialog {
 
                     spinerHireDate.setValue(d);
                     
-                   
-                  //  spinerHireDate.setValue(inputDate);
+                    
+                    //  spinerHireDate.setValue(inputDate);
                     comDep.setSelectedItem(allDataFileArray.get(index).getDepartement());
                     comDep.setEditable(false);
                     
