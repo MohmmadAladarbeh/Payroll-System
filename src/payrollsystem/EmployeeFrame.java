@@ -41,7 +41,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import net.sf.jasperreports.view.JasperViewer;
-import payrollsystem.file_data.FileData;
+import file_data.FileData;
 
 /**
  *
@@ -444,6 +444,12 @@ public class EmployeeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCloseMouseClicked
 
     private void btnSearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchMouseClicked
+        
+
+    }//GEN-LAST:event_btnSearchMouseClicked
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
         // Fetch the data from users inputs.
         String id = txtEmpId.getText();
         String name = txtEmpName.getText();
@@ -461,11 +467,6 @@ public class EmployeeFrame extends javax.swing.JFrame {
 
         // send data with use search button 
         search(name, id, dept);
-
-    }//GEN-LAST:event_btnSearchMouseClicked
-
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnClearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClearMouseClicked
@@ -540,7 +541,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
                     continue;
                 }
 
-                fileDataArray.add(new FileData(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7]));
+                fileDataArray.add(new FileData(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7], array[8]));
                 bw.write(currentLine + System.getProperty("line.separator"));
             }
             bw.close();
@@ -621,11 +622,9 @@ public class EmployeeFrame extends javax.swing.JFrame {
                 parameter.put("P_Status", allDataFile.get(index).getState());
                 parameter.put("P_HireDate", allDataFile.get(index).getHireDate());
                 parameter.put("P_Address", allDataFile.get(index).getAddress());
+                parameter.put("P_Salary", allDataFile.get(index).getSalary());
             }
         }
-        
-        
-        
         
         
         try {
@@ -637,11 +636,12 @@ public class EmployeeFrame extends javax.swing.JFrame {
             HashMap [] hash = new HashMap[1];
             dataSource = new JRBeanArrayDataSource(hash);
            
-                
+           
             
             JasperReport report = JasperCompileManager.compileReport(reportSource);
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameter, dataSource);
             JasperViewer.viewReport(jasperPrint);
+            JasperViewer.viewReport(jasperPrint, false);
         } catch (JRException ex) {
             Logger.getLogger(EmployeeFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -658,6 +658,11 @@ public class EmployeeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReportMouseClicked
 
     private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
+
+        String deptName = comDep.getSelectedItem().toString();
+        String empId = txtEmpId.getText();
+        String empName = txtEmpName.getText();
+        
         try {
             showReport();
         } catch (JRException ex) {
@@ -670,7 +675,7 @@ public class EmployeeFrame extends javax.swing.JFrame {
     public void showReport() throws JRException {
         try {
 
-            String empIdNumber = txtEmpId.getText().toString();
+            String empId = txtEmpId.getText().toString();
             String empName = txtEmpName.getText().toString();
             String depName = comDep.getSelectedItem().toString();
 
@@ -678,19 +683,55 @@ public class EmployeeFrame extends javax.swing.JFrame {
             List<String> nameList = new ArrayList();
             List<String> dateList = new ArrayList();
             List<String> depList = new ArrayList();
-
-            for (int index = 0; index < allDataFile.size(); index++) {
-                idList.add(allDataFile.get(index).getId());
-                nameList.add(allDataFile.get(index).getName());
-                dateList.add(allDataFile.get(index).getHireDate());
-                depList.add(allDataFile.get(index).getDepartement());
-                System.out.println("Array" + allDataFile.get(index));
+            List<Double> salaryList = new ArrayList();
+            
+            for (int index = 1; index < allDataFile.size(); index++) {
+                System.out.println("Salary" + allDataFile.get(index).getSalary());
+                if (empName.equals("") && empId.equals("") && depName.equals("All")){
+                    idList.add(allDataFile.get(index).getId());
+                    nameList.add(allDataFile.get(index).getName());
+                    dateList.add(allDataFile.get(index).getHireDate());
+                    depList.add(allDataFile.get(index).getDepartement());
+                    salaryList.add(Double. parseDouble(allDataFile.get(index).getSalary().trim()));
+                }
+                
+                
+                else if (!empId.equals("") && empName.equals("")){
+                    if (allDataFile.get(index).getId().equals(empId)){
+                        idList.add(allDataFile.get(index).getId());
+                        nameList.add(allDataFile.get(index).getName());
+                        dateList.add(allDataFile.get(index).getHireDate());
+                        depList.add(allDataFile.get(index).getDepartement());
+                        salaryList.add(Double.parseDouble(allDataFile.get(index).getSalary().trim()));
+                    }
+                }
+                else if (!empName.equals("") && empId.equals("")){
+                    if (allDataFile.get(index).getName().equals(empName)){
+                        idList.add(allDataFile.get(index).getId());
+                        nameList.add(allDataFile.get(index).getName());
+                        dateList.add(allDataFile.get(index).getHireDate());
+                        depList.add(allDataFile.get(index).getDepartement());
+                        salaryList.add(Double.parseDouble(allDataFile.get(index).getSalary().trim()));
+                    }
+                }
+                else if (!depName.equals("")){
+                    if (allDataFile.get(index).getDepartement().equals(depName)){
+                        idList.add(allDataFile.get(index).getId());
+                        nameList.add(allDataFile.get(index).getName());
+                        dateList.add(allDataFile.get(index).getHireDate());
+                        depList.add(allDataFile.get(index).getDepartement());
+                        salaryList.add(Double.parseDouble(allDataFile.get(index).getSalary().trim()));
+                    }
+                }
+                
             }
             
+            // Sort List of String 
             Collections.sort(depList);
 
             JRBeanArrayDataSource dataSource;
             String repName = "Test_Report";
+            
             if (idList.isEmpty()) {
                 /*Fill Report data source*/
                 dataSource = null;
@@ -709,7 +750,8 @@ public class EmployeeFrame extends javax.swing.JFrame {
                     row.put("F_Name", nameList.get(i));
                     row.put("F_Dep", depList.get(i));
                     row.put("F_Date", dateList.get(i));
-
+                    row.put("F_Salary", salaryList.get(i));
+                    
                     detailRows[i] = row;
                     i++;
 
@@ -722,6 +764,9 @@ public class EmployeeFrame extends javax.swing.JFrame {
 
             /*Fill Report general parameters*/
             Map parameters = new HashMap();
+            parameters.put("P_DepName", depName);
+            parameters.put("P_EmpId", empId);
+            parameters.put("P_EmpName", empName);
             
             BufferedImage image = ImageIO.read(getClass().getResource("image\\Payroll_Logo.png"));
             parameters.put("logo", image );

@@ -1,12 +1,13 @@
-Id    Name    Password    Department    HireDate    Address    Gender    State
-12345    Ali    1234    IT    12/12/2020    Amman    Mael    Single
-21234    Nadden    1234    Financial    12/12/2020    Amman    Female    Single
-31234    Sara    1234    Sales    12/12/2020    Amman    Mael    Single
-41234    Mousa    1234    IT    12/12/2020    Amman    Mael    Married
-12349    Mamoun    123456789    IT    20/20/2020    Amman    Mael    Married
-12333    Malek    123456789    IT    20/10/3322    Jaban    Mael    Married
-12388    Mamoun    123456789    IT    20/20/2020    Amman    Mael    Married
-12343    Mayar Ali    123456789    IT    20/20/2020    Amman    Female    Single
-66666    Zeyad        Financial    29/11/2022    Usa    Mael    Single
-98798    popopo        Financial    29/11/2022    opop    Mael    Single
-89898    popop        IT    29/11/2022    Tokyo    Mael    Single
+Id    Name    Password    Department    HireDate    Address    Gender    State    Salary
+12345    Ali    1234    IT    12/12/2020    Amman    Mael    Single    1000.00
+21234    Nadden    1234    Financial    12/12/2020    Amman    Female    Single    5000.00
+31234    Sara    1234    Sales    12/12/2020    Amman    Mael    Single    550.00
+41234    Mousa    1234    IT    12/12/2020    Amman    Mael    Married    350.00
+12349    Mamoun    123456789    IT    20/20/2020    Amman    Mael    Married    800.00
+12333    Malek    123456789    IT    20/10/3322    Jaban    Mael    Married    6000.00
+12388    Mamoun    123456789    IT    20/20/2020    Amman    Mael    Married    2033.00
+12343    Mayar Ali    123456789    IT    20/20/2020    Amman    Female    Single    850.00
+66666    Zeyad        Financial    29/11/2022    Usa    Mael    Single    650.00
+98798    popopo        Financial    29/11/2022    opop    Mael    Single    750.00
+89898    popop        IT    29/11/2022    Tokyo    Mael    Single    650.00
+52654    Balqees        Sales    04/12/2022    Amman    Female    Single    650.00

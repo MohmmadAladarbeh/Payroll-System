@@ -12,7 +12,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import payrollsystem.file_data.FileData;
+import file_data.FileData;
 
 /**
  *

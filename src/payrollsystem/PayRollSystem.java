@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import payrollsystem.file_data.FileData;
+import file_data.FileData;
 
 /**
  *
@@ -35,7 +35,7 @@ public class PayRollSystem {
         
         ArrayList <FileData> fileDataArray = new ArrayList<> ();
 
-       
+        
         try {
             File file = new File ("employees.txt");
             FileReader fileReader = new FileReader (file);
@@ -45,7 +45,7 @@ public class PayRollSystem {
                 // trim newline when comparing with lineToRemove
                 String trimmedLine = currentLine1.trim();
                 String [] arrLine = trimmedLine.split("    ");
-                fileDataArray.add (new FileData(arrLine[0], arrLine[1], arrLine[2], arrLine[3], arrLine[4], arrLine[5], arrLine[6], arrLine[7]));
+                fileDataArray.add (new FileData(arrLine[0], arrLine[1], arrLine[2], arrLine[3], arrLine[4], arrLine[5], arrLine[6], arrLine[7], arrLine[8]));
             }
             fileReader.close();
             br.close();
@@ -57,6 +57,7 @@ public class PayRollSystem {
         
         // set fileDataArray ArrayList to the FileData class (Model)
         FileData.setArray(fileDataArray);
+        
         
         
         

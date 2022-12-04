@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package payrollsystem.file_data;
+package file_data;
 
 import java.util.List;
 

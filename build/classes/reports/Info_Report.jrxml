@@ -32,6 +32,7 @@
 	<parameter name="P_Status" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="P_HireDate" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="P_Address" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="P_Salary" isForPrompting="false" class="java.lang.String"/>
 
 	<field name="F_Id" class="java.lang.String"/>
 	<field name="F_Name" class="java.lang.String"/>
@@ -164,7 +165,7 @@
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="242"  isSplitAllowed="true" >
+			<band height="292"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						x="0"
@@ -268,6 +269,32 @@
 						<font/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{P_Address}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="0"
+						y="243"
+						width="165"
+						height="39"
+						key="staticText-9"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="16" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Salary]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="165"
+						y="243"
+						width="200"
+						height="39"
+						key="textField-7"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{P_Salary}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>

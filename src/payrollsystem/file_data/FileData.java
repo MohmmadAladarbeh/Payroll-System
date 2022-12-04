@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package payrollsystem.file_data;
+package file_data;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,9 @@ public class FileData {
     private String gender;
     private String state;
     private String passwrod;
+    private String salary;
     public static ArrayList <FileData> array;
+    
 
     public FileData() {
     }
@@ -36,7 +38,8 @@ public class FileData {
             String hireDate, 
             String address, 
             String gender, 
-            String state) {
+            String state,
+            String salary) {
         this.Id = Id;
         this.name = name;
         this.passwrod = password;
@@ -45,6 +48,7 @@ public class FileData {
         this.gender = gender;
         this.state = state;
         this.hireDate = hireDate;
+        this.salary = salary;
     }
 
     public static ArrayList<FileData> getArray() {
@@ -121,6 +125,15 @@ public class FileData {
     public void setState(String state) {
         this.state = state;
     }
+
+    public String getSalary() {
+        return salary;
+    }
+
+    public void setSalary(String salary) {
+        this.salary = salary;
+    }
+    
     
     
 
@@ -128,13 +141,14 @@ public class FileData {
 
     @Override
     public String toString() {
-        return "Name " + name + 
+        return " Id " + Id +
+                "Name " + name + 
                 " HireDate " + hireDate + 
                 " Address " + address + 
                 " Gender " + gender + 
                 " State " + state + 
                 " Departement " + departement + 
-                " ID " + Id; //To change body of generated methods, choose Tools | Templates.
+                " Salary " + salary; //To change body of generated methods, choose Tools | Templates.
     }
 
     

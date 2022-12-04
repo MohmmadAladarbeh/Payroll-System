@@ -36,8 +36,8 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-import payrollsystem.file_data.FileData;
-import payrollsystem.file_data.StaticItems;
+import file_data.FileData;
+import file_data.StaticItems;
 
 /**
  *
@@ -111,7 +111,7 @@ public class DialogFrame extends javax.swing.JDialog {
                     txtId.setText(allDataFileArray.get(index).getId());
                     txtName.setText(allDataFileArray.get(index).getName());
                     txtAddress.setText(allDataFileArray.get(index).getAddress());
-                    
+                    txtSalary.setText(allDataFileArray.get(index).getSalary());
                     String inputString = allDataFileArray.get(index).getHireDate();
                     
                     String OLD_FORMAT = "dd/MM/yyyy";
@@ -160,7 +160,7 @@ public class DialogFrame extends javax.swing.JDialog {
                     txtId.setEditable(false);
                     txtName.setText(allDataFileArray.get(index).getName());
                     txtAddress.setText(allDataFileArray.get(index).getAddress());
-
+                    txtSalary.setText(allDataFileArray.get(index).getSalary());
                     String inputString = allDataFileArray.get(index).getHireDate();
                     
                     String OLD_FORMAT = "dd/MM/yyyy";
@@ -234,6 +234,8 @@ public class DialogFrame extends javax.swing.JDialog {
         txtPassword = new javax.swing.JPasswordField();
         labelPasswordErro = new javax.swing.JLabel();
         spinerHireDate = new javax.swing.JSpinner();
+        labelPassword1 = new javax.swing.JLabel();
+        txtSalary = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -356,12 +358,29 @@ public class DialogFrame extends javax.swing.JDialog {
             }
         });
 
+        txtPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPasswordActionPerformed(evt);
+            }
+        });
+
         labelPasswordErro.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         labelPasswordErro.setForeground(new java.awt.Color(255, 0, 0));
         labelPasswordErro.setText("Your Password must be greater than 8");
 
         spinerHireDate.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, null, java.util.Calendar.DAY_OF_YEAR));
         spinerHireDate.setEditor(new javax.swing.JSpinner.DateEditor(spinerHireDate, "dd/MM/yyyy"));
+
+        labelPassword1.setFont(new java.awt.Font("Bahnschrift", 0, 16)); // NOI18N
+        labelPassword1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/payrollsystem/image/id.png"))); // NOI18N
+        labelPassword1.setText("Salary");
+
+        txtSalary.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtSalary.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSalaryActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -373,20 +392,24 @@ public class DialogFrame extends javax.swing.JDialog {
                         .addGap(186, 186, 186)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(74, 74, 74)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(74, 74, 74)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelPassword1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
                                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(9, 9, 9)))
-                        .addGap(18, 18, 18)
+                                .addGap(30, 30, 30)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtId, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtName, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -395,7 +418,7 @@ public class DialogFrame extends javax.swing.JDialog {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(radioBtnMael)
                                     .addComponent(radioBtnMarried))
-                                .addGap(77, 98, Short.MAX_VALUE)
+                                .addGap(77, 109, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(radioBtnSingle)
                                     .addComponent(radioBtnFemale)))
@@ -407,7 +430,8 @@ public class DialogFrame extends javax.swing.JDialog {
                                     .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(labelIdError, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(spinerHireDate))))
+                            .addComponent(spinerHireDate)
+                            .addComponent(txtSalary))))
                 .addGap(42, 42, 42))
         );
         layout.setVerticalGroup(
@@ -463,11 +487,18 @@ public class DialogFrame extends javax.swing.JDialog {
                     .addComponent(labelPassword))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelPasswordErro, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 17, Short.MAX_VALUE))
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtSalary, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(21, 21, 21))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(labelPassword1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -537,6 +568,14 @@ public class DialogFrame extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtAddressActionPerformed
 
+    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPasswordActionPerformed
+
+    private void txtSalaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSalaryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSalaryActionPerformed
+
     
     public void updateUser () {
         
@@ -550,6 +589,7 @@ public class DialogFrame extends javax.swing.JDialog {
         System.out.println("password " + password);
         String department = comDep.getSelectedItem().toString();
         String gender = "", status = "";
+        String salary = txtSalary.getText();
         ArrayList <FileData> allDataFileArray = FileData.getArray();
         
         
@@ -600,13 +640,13 @@ public class DialogFrame extends javax.swing.JDialog {
                     String [] array = trimmedLine.split("    ");  
                     if (array[0].equals(id))  
                         continue;  
-                    fileDataArray.add(new FileData(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7]));     
+                    fileDataArray.add(new FileData(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7], array[8]));     
                     bw.write(currentLine + System.getProperty("line.separator"));  
                 }  
                 
-                fileDataArray.add(new FileData(id, name, password, department, hireDate, address, gender, status));   
-                bw.write(String.format("%s    %s    %s    %s    %s    %s    %s    %s",   
-                        id, name, password, department, hireDate, address, gender, status) + System.getProperty("line.separator"));  
+                fileDataArray.add(new FileData(id, name, password, department, hireDate, address, gender, status, salary));   
+                bw.write(String.format("%s    %s    %s    %s    %s    %s    %s    %s    %s",   
+                        id, name, password, department, hireDate, address, gender, status, salary) + System.getProperty("line.separator"));  
                 bw.close();  
                 br.close();  
                 //    file.delete();  
@@ -635,6 +675,7 @@ public class DialogFrame extends javax.swing.JDialog {
         System.out.println("password " + password);
         String department = comDep.getSelectedItem().toString();
         String gender = "", status = "";
+        String salary = txtSalary.getText();
         ArrayList <FileData> allDataFileArray = FileData.getArray();
         
         
@@ -711,13 +752,13 @@ public class DialogFrame extends javax.swing.JDialog {
                     String trimmedLine = currentLine.trim();
                     String [] array = trimmedLine.split("    ");
                         
-                    fileDataArray.add(new FileData(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7]));   
+                    fileDataArray.add(new FileData(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7], array[8]));   
                     bw.write(currentLine + System.getProperty("line.separator"));
                 }
                 
-                fileDataArray.add(new FileData(id, name, password, department, hireDateTxt, address, gender, status));   
+                fileDataArray.add(new FileData(id, name, password, department, hireDateTxt, address, gender, status, salary));   
                 bw.write(String.format("%s    %s    %s    %s    %s    %s    %s    %s", 
-                        id, name, password, department, hireDateTxt, address, gender, status) + System.getProperty("line.separator"));
+                        id, name, password, department, hireDateTxt, address, gender, status, salary) + System.getProperty("line.separator"));
                 bw.close();
                 br.close();
                 //    file.delete();
@@ -790,6 +831,7 @@ public class DialogFrame extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel labelIdError;
     private javax.swing.JLabel labelPassword;
+    private javax.swing.JLabel labelPassword1;
     private javax.swing.JLabel labelPasswordErro;
     private javax.swing.JRadioButton radioBtnFemale;
     private javax.swing.JRadioButton radioBtnMael;
@@ -802,5 +844,6 @@ public class DialogFrame extends javax.swing.JDialog {
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtName;
     private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JTextField txtSalary;
     // End of variables declaration//GEN-END:variables
 }
